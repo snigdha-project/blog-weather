@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webflow Blog Post Automator</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: grid;
+            place-items: center;
+            min-height: 90vh;
+            background: #f4f4f4;
+        }
+
+        #container {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        #startButton {
+            font-size: 1.2rem;
+            padding: 0.8rem 1.5rem;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #startButton:disabled {
+            background-color: #aaa;
+            cursor: not-allowed;
+        }
+
+        #status {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            font-family: monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <h2>Automatic Indian Weather Blog Post</h2>
+        <button id="startButton">Start Automation</button>
+        <div id="status">Click the button to publish a new post.</div>
+    </div>
+
+    <script>
+        document.getElementById('startButton').addEventListener('click', async () => {
+            const startButton = document.getElementById('startButton');
+            const statusDiv = document.getElementById('status');
+
+            startButton.disabled = true;
+            startButton.innerText = "Processing...";
+            statusDiv.innerText = "Automation started. This may take up to 60 seconds...";
+
+            try {
+                // This will call the file in the /api folder
+                const response = await fetch('/api/create-post', {
+                    method: 'POST'
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Something went wrong');
+                }
+
+                statusDiv.innerHTML = \`✅ Success! Post created:<br><a href="\${data.url}" target="_blank">\${data.url}</a>\`;
+                startButton.innerText = "Done!";
+
+            } catch (error) {
+                console.error('Error:', error);
+                statusDiv.innerText = \`❌ Error: \${error.message}\`;
+                startButton.disabled = false;
+                startButton.innerText = "Start Automation";
+            }
+        });
+    </script>
+</body>
+
+</html>

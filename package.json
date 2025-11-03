@@ -1,13 +1,9 @@
 {
-  "name": "webflow-single-file-bot",
+  "name": "webflow-weather-bot",
   "version": "1.0.0",
   "private": true,
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js"
-  },
+  "type": "module",
   "dependencies": {
-    "express": "^4.19.2",
     "node-fetch": "^3.3.2",
     "resend": "^3.4.0"
   }
